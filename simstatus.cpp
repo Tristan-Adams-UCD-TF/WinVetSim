@@ -1003,6 +1003,44 @@ sendSimctrData(void)
 	htmlReply += ",\n";
 	_itoa_s(simmgr_shm->status.respiration.manual_count, buffer, 256, 10);
 	makejson("manual_count", buffer);
+	htmlReply += "\n},\n";
+
+	htmlReply += " \"eyes\" : {\n";
+	_itoa_s(simmgr_shm->status.eyes.right_state, buffer, 256, 10);
+	makejson("right_state", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_lid, buffer, 256, 10);
+	makejson("right_lid", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_move, buffer, 256, 10);
+	makejson("right_move", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_position, buffer, 256, 10);
+	makejson("right_position", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_blink, buffer, 256, 10);
+	makejson("right_blink", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_pupil, buffer, 256, 10);
+	makejson("right_pupil", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_state, buffer, 256, 10);
+	makejson("left_state", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_lid, buffer, 256, 10);
+	makejson("left_lid", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_move, buffer, 256, 10);
+	makejson("left_move", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_position, buffer, 256, 10);
+	makejson("left_position", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_blink, buffer, 256, 10);
+	makejson("left_blink", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_pupil, buffer, 256, 10);
+	makejson("left_pupil", buffer);
 	htmlReply += "\n}\n";
 
 }
