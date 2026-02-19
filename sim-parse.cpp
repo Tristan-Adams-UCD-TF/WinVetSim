@@ -571,6 +571,77 @@ cpr_parse(const char* elem, const char* value, struct cpr* cpr)
 	}
 	return (sts);
 }
+int
+eyes_parse(const char* elem, const char* value, struct eyes* eyes)
+{
+	int sts = 0;
+
+	if ((!elem) || (!value) || (!eyes))
+	{
+		return (-16);
+	}
+	if (strcmp(elem, "connected") == 0)
+	{
+		eyes->connected = atoi(value);
+	}
+	else if (strcmp(elem, "right_state") == 0)
+	{
+		eyes->right_state = atoi(value);
+	}
+	else if (strcmp(elem, "right_lid") == 0)
+	{
+		eyes->right_lid = atoi(value);
+	}
+	else if (strcmp(elem, "right_move") == 0)
+	{
+		eyes->right_move = atoi(value);
+	}
+	else if (strcmp(elem, "right_position") == 0)
+	{
+		eyes->right_position = atoi(value);
+	}
+	else if (strcmp(elem, "right_blink") == 0)
+	{
+		eyes->right_blink = atoi(value);
+	}
+	else if (strcmp(elem, "right_pupil") == 0)
+	{
+		eyes->right_pupil = atoi(value);
+	}
+	else if (strcmp(elem, "left_state") == 0)
+	{
+		eyes->left_state = atoi(value);
+	}
+	else if (strcmp(elem, "left_lid") == 0)
+	{
+		eyes->left_lid = atoi(value);
+	}
+	else if (strcmp(elem, "left_move") == 0)
+	{
+		eyes->left_move = atoi(value);
+	}
+	else if (strcmp(elem, "left_position") == 0)
+	{
+		eyes->left_position = atoi(value);
+	}
+	else if (strcmp(elem, "left_blink") == 0)
+	{
+		eyes->left_blink = atoi(value);
+	}
+	else if (strcmp(elem, "left_pupil") == 0)
+	{
+		eyes->left_pupil = atoi(value);
+	}
+	else if (strcmp(elem, "send_command") == 0)
+	{
+		eyes->send_command = atoi(value);
+	}
+	else
+	{
+		sts = 1;
+	}
+	return (sts);
+}
 /**
 * initializeParameterStruct
 * @initParams: Pointer to a "struct instructor"
@@ -650,6 +721,21 @@ initializeParameterStruct(struct instructor* initParams)
 	initParams->telesim.vid[1].command = -1;
 	initParams->telesim.vid[1].param = -1;
 	initParams->telesim.vid[1].next = -1;
+
+	initParams->eyes.connected = -1;
+	initParams->eyes.right_state = -1;
+	initParams->eyes.right_lid = -1;
+	initParams->eyes.right_move = -1;
+	initParams->eyes.right_position = -1;
+	initParams->eyes.right_blink = -1;
+	initParams->eyes.right_pupil = -1;
+	initParams->eyes.left_state = -1;
+	initParams->eyes.left_lid = -1;
+	initParams->eyes.left_move = -1;
+	initParams->eyes.left_position = -1;
+	initParams->eyes.left_blink = -1;
+	initParams->eyes.left_pupil = -1;
+	initParams->eyes.send_command = -1;
 }
 
 /**
@@ -686,6 +772,7 @@ processInit(struct instructor* initParams)
 		initParams->telesim.vid[1].next = rand();
 	}
 	memcpy(&simmgr_shm->instructor.telesim, &initParams->telesim, sizeof(struct telesim));
+	memcpy(&simmgr_shm->instructor.eyes, &initParams->eyes, sizeof(struct eyes));
 	releaseInstructorLock();
 
 	// Delay to allow simmgr to pick up the changes

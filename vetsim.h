@@ -306,6 +306,23 @@ struct vocals
 	int play;
 	int mute;
 };
+struct eyes
+{
+	int connected;
+	int right_state;
+	int right_lid;
+	int right_move;
+	int right_position;
+	int right_blink;
+	int right_pupil;
+	int left_state;
+	int left_lid;
+	int left_move;
+	int left_position;
+	int left_blink;
+	int left_pupil;
+	int send_command;
+};
 struct logfile
 {
 	HANDLE 	sema;	// Mutex lock - Used to allow multiple writers
@@ -330,6 +347,7 @@ struct status
 	struct cpr				cpr;
 	struct defibrillation	defibrillation;
 	struct telesim			telesim;
+	struct eyes				eyes;
 	char 	eventName[STR_SIZE];
 };
 
@@ -346,6 +364,7 @@ struct instructor
 	struct cpr			cpr;
 	struct defibrillation	defibrillation;
 	struct telesim			telesim;
+	struct eyes				eyes;
 	char	eventName[STR_SIZE];
 };
 
@@ -486,6 +505,7 @@ int telesim_parse(const char* elem, const char* value, struct telesim* ts);
 int vocals_parse(const char* elem, const char* value, struct vocals* voc);
 int media_parse(const char* elem, const char* value, struct media* med);
 int cpr_parse(const char* elem, const char* value, struct cpr* cpr);
+int eyes_parse(const char* elem, const char* value, struct eyes* eyes);
 void initializeParameterStruct(struct instructor* initParams);
 void processInit(struct instructor* initParams);
 int getValueFromName(char* param_class, char* param_element);

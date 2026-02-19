@@ -1,0 +1,28 @@
+Here's a summary of WinVetSim:                                                                                                              
+                                                                                                                                                                                               
+  What it is: A Windows-based veterinary medical simulation manager (SimMgr), part of the Open VetSim project originally from Cornell University College of Veterinary Medicine. Licensed under   GPLv3, currently at version 2.4.                                                                                                                                                            
+                                                                                                                                                                                               
+  Purpose: Runs educational/training scenarios that simulate animal patient physiology — cardiac, respiratory, and general vital signs — allowing instructors to control dynamic, branching    
+  scenarios in real time.
+
+  Tech stack: C++17 built with MSVC/Visual Studio 2022, using nlohmann/json for serialization, WinSock2 for networking, and an embedded PHP 8.0 web server for the instructor interface.       
+
+  Architecture highlights:
+
+  - Shared memory hub (simmgr_shm) — Central data structure holding patient status, instructor commands, events, and controller state. All subsystems read/write through this.
+  - Multithreaded — Separate threads for the main simulation loop (~100 Hz), scenario execution, pulse synchronization, status server, and timers, coordinated via mutexes and Windows events. 
+  - Scenario engine — Parses XML scenario files defining scenes, triggers, and events. Supports branching logic (e.g., "if heart rate > 140, go to scene 5"), gradual parameter trends, and    
+  timeout-based transitions.
+  - Networking — TCP sockets on ports 40844 (pulse sync) and 40845 (status/commands), plus an HTTP/PHP instructor interface on port 8081.
+
+  Key source files:
+  - VetSim.cpp — Main simulation loop and state management
+  - scenario.cpp / scenario_xml.cpp — Scenario parsing and execution
+  - pulse.cpp — Cardiac/respiratory pulse synchronization
+  - simstatus.cpp — Network status server
+  - sim-parse.cpp — Parameter parsing and trend application
+  - WebSrv.cpp — PHP web server lifecycle management
+
+
+
+  

@@ -145,6 +145,10 @@ simstatusMain(void)
 		cfd = accept(sfd, (struct sockaddr*)&client_addr, &socklen);
 		if (cfd >= 0)
 		{
+			// Set receive timeout to prevent blocking on preconnected sockets
+			DWORD rcvTimeout = 2000;  // 2 seconds
+			setsockopt(cfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&rcvTimeout, sizeof(rcvTimeout));
+
 			htmlReply.clear();
 
 			// Receive HTTP Header
@@ -753,6 +757,10 @@ simstatusHandleCommand(char *args)
 				{
 					sts = 2;
 				}
+			}
+			else if (v[1].compare("eyes") == 0)
+			{
+				sts = eyes_parse(v[2].c_str(), value.c_str(), &simmgr_shm->instructor.eyes);
 			}
 			else
 			{
@@ -1404,6 +1412,47 @@ sendStatus(void)
 	htmlReply += ",\n";
 	_itoa_s(simmgr_shm->server.dbg3, buffer, 256, 10);
 	makejson("debug3", buffer);
+	htmlReply += "\n},\n";
+
+	htmlReply += " \"eyes\" : {\n";
+	_itoa_s(simmgr_shm->status.eyes.connected, buffer, 256, 10);
+	makejson("connected", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_state, buffer, 256, 10);
+	makejson("right_state", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_lid, buffer, 256, 10);
+	makejson("right_lid", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_move, buffer, 256, 10);
+	makejson("right_move", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_position, buffer, 256, 10);
+	makejson("right_position", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_blink, buffer, 256, 10);
+	makejson("right_blink", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.right_pupil, buffer, 256, 10);
+	makejson("right_pupil", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_state, buffer, 256, 10);
+	makejson("left_state", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_lid, buffer, 256, 10);
+	makejson("left_lid", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_move, buffer, 256, 10);
+	makejson("left_move", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_position, buffer, 256, 10);
+	makejson("left_position", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_blink, buffer, 256, 10);
+	makejson("left_blink", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.left_pupil, buffer, 256, 10);
+	makejson("left_pupil", buffer);
 	htmlReply += "\n},\n";
 
 	htmlReply += "\"controllers\" : {\n";

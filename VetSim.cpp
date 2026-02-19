@@ -1954,6 +1954,77 @@ scan_commands(void)
 			simmgr_shm->status.telesim.vid[v].next = simmgr_shm->instructor.telesim.vid[v].next;
 		}
 	}
+	// Eyes
+	if (simmgr_shm->instructor.eyes.connected >= 0)
+	{
+		simmgr_shm->status.eyes.connected = simmgr_shm->instructor.eyes.connected;
+		simmgr_shm->instructor.eyes.connected = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_state >= 0)
+	{
+		simmgr_shm->status.eyes.right_state = simmgr_shm->instructor.eyes.right_state;
+		simmgr_shm->instructor.eyes.right_state = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_lid >= 0)
+	{
+		simmgr_shm->status.eyes.right_lid = simmgr_shm->instructor.eyes.right_lid;
+		simmgr_shm->instructor.eyes.right_lid = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_move >= 0)
+	{
+		simmgr_shm->status.eyes.right_move = simmgr_shm->instructor.eyes.right_move;
+		simmgr_shm->instructor.eyes.right_move = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_position >= 0)
+	{
+		simmgr_shm->status.eyes.right_position = simmgr_shm->instructor.eyes.right_position;
+		simmgr_shm->instructor.eyes.right_position = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_blink >= 0)
+	{
+		simmgr_shm->status.eyes.right_blink = simmgr_shm->instructor.eyes.right_blink;
+		simmgr_shm->instructor.eyes.right_blink = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_pupil >= 0)
+	{
+		simmgr_shm->status.eyes.right_pupil = simmgr_shm->instructor.eyes.right_pupil;
+		simmgr_shm->instructor.eyes.right_pupil = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_state >= 0)
+	{
+		simmgr_shm->status.eyes.left_state = simmgr_shm->instructor.eyes.left_state;
+		simmgr_shm->instructor.eyes.left_state = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_lid >= 0)
+	{
+		simmgr_shm->status.eyes.left_lid = simmgr_shm->instructor.eyes.left_lid;
+		simmgr_shm->instructor.eyes.left_lid = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_move >= 0)
+	{
+		simmgr_shm->status.eyes.left_move = simmgr_shm->instructor.eyes.left_move;
+		simmgr_shm->instructor.eyes.left_move = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_position >= 0)
+	{
+		simmgr_shm->status.eyes.left_position = simmgr_shm->instructor.eyes.left_position;
+		simmgr_shm->instructor.eyes.left_position = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_blink >= 0)
+	{
+		simmgr_shm->status.eyes.left_blink = simmgr_shm->instructor.eyes.left_blink;
+		simmgr_shm->instructor.eyes.left_blink = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_pupil >= 0)
+	{
+		simmgr_shm->status.eyes.left_pupil = simmgr_shm->instructor.eyes.left_pupil;
+		simmgr_shm->instructor.eyes.left_pupil = -1;
+	}
+	if (simmgr_shm->instructor.eyes.send_command >= 0)
+	{
+		simmgr_shm->status.eyes.send_command = simmgr_shm->instructor.eyes.send_command;
+		simmgr_shm->instructor.eyes.send_command = -1;
+	}
 	// CPR
 	if (simmgr_shm->instructor.cpr.compression >= 0)
 	{
