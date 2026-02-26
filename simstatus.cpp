@@ -1065,7 +1065,15 @@ sendSimctrData(void)
 	htmlReply += ",\n";
 	_itoa_s(simmgr_shm->status.eyes.left_nystagmus, buffer, 256, 10);
 	makejson("left_nystagmus", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.send_command, buffer, 256, 10);
+	makejson("send_command", buffer);
+	htmlReply += ",\n";
+	_itoa_s(simmgr_shm->status.eyes.send_input_response, buffer, 256, 10);
+	makejson("send_input_response", buffer);
 	htmlReply += "\n}\n";
+	simmgr_shm->status.eyes.send_command = 0;
+	simmgr_shm->status.eyes.send_input_response = 0;
 
 }
 
