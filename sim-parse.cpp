@@ -632,9 +632,45 @@ eyes_parse(const char* elem, const char* value, struct eyes* eyes)
 	{
 		eyes->left_pupil = atoi(value);
 	}
+	else if (strcmp(elem, "right_plr") == 0)
+	{
+		eyes->right_plr = atoi(value);
+	}
+	else if (strcmp(elem, "right_menace") == 0)
+	{
+		eyes->right_menace = atoi(value);
+	}
+	else if (strcmp(elem, "right_palpebral") == 0)
+	{
+		eyes->right_palpebral = atoi(value);
+	}
+	else if (strcmp(elem, "right_nystagmus") == 0)
+	{
+		eyes->right_nystagmus = atoi(value);
+	}
+	else if (strcmp(elem, "left_plr") == 0)
+	{
+		eyes->left_plr = atoi(value);
+	}
+	else if (strcmp(elem, "left_menace") == 0)
+	{
+		eyes->left_menace = atoi(value);
+	}
+	else if (strcmp(elem, "left_palpebral") == 0)
+	{
+		eyes->left_palpebral = atoi(value);
+	}
+	else if (strcmp(elem, "left_nystagmus") == 0)
+	{
+		eyes->left_nystagmus = atoi(value);
+	}
 	else if (strcmp(elem, "send_command") == 0)
 	{
 		eyes->send_command = atoi(value);
+	}
+	else if (strcmp(elem, "send_input_response") == 0)
+	{
+		eyes->send_input_response = atoi(value);
 	}
 	else
 	{
@@ -735,7 +771,16 @@ initializeParameterStruct(struct instructor* initParams)
 	initParams->eyes.left_position = -1;
 	initParams->eyes.left_blink = -1;
 	initParams->eyes.left_pupil = -1;
+	initParams->eyes.right_plr = -1;
+	initParams->eyes.right_menace = -1;
+	initParams->eyes.right_palpebral = -1;
+	initParams->eyes.right_nystagmus = -1;
+	initParams->eyes.left_plr = -1;
+	initParams->eyes.left_menace = -1;
+	initParams->eyes.left_palpebral = -1;
+	initParams->eyes.left_nystagmus = -1;
 	initParams->eyes.send_command = -1;
+	initParams->eyes.send_input_response = -1;
 }
 
 /**

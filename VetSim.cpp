@@ -2025,6 +2025,51 @@ scan_commands(void)
 		simmgr_shm->status.eyes.send_command = simmgr_shm->instructor.eyes.send_command;
 		simmgr_shm->instructor.eyes.send_command = -1;
 	}
+	if (simmgr_shm->instructor.eyes.right_plr >= 0)
+	{
+		simmgr_shm->status.eyes.right_plr = simmgr_shm->instructor.eyes.right_plr;
+		simmgr_shm->instructor.eyes.right_plr = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_menace >= 0)
+	{
+		simmgr_shm->status.eyes.right_menace = simmgr_shm->instructor.eyes.right_menace;
+		simmgr_shm->instructor.eyes.right_menace = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_palpebral >= 0)
+	{
+		simmgr_shm->status.eyes.right_palpebral = simmgr_shm->instructor.eyes.right_palpebral;
+		simmgr_shm->instructor.eyes.right_palpebral = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_nystagmus >= 0)
+	{
+		simmgr_shm->status.eyes.right_nystagmus = simmgr_shm->instructor.eyes.right_nystagmus;
+		simmgr_shm->instructor.eyes.right_nystagmus = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_plr >= 0)
+	{
+		simmgr_shm->status.eyes.left_plr = simmgr_shm->instructor.eyes.left_plr;
+		simmgr_shm->instructor.eyes.left_plr = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_menace >= 0)
+	{
+		simmgr_shm->status.eyes.left_menace = simmgr_shm->instructor.eyes.left_menace;
+		simmgr_shm->instructor.eyes.left_menace = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_palpebral >= 0)
+	{
+		simmgr_shm->status.eyes.left_palpebral = simmgr_shm->instructor.eyes.left_palpebral;
+		simmgr_shm->instructor.eyes.left_palpebral = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_nystagmus >= 0)
+	{
+		simmgr_shm->status.eyes.left_nystagmus = simmgr_shm->instructor.eyes.left_nystagmus;
+		simmgr_shm->instructor.eyes.left_nystagmus = -1;
+	}
+	if (simmgr_shm->instructor.eyes.send_input_response >= 0)
+	{
+		simmgr_shm->status.eyes.send_input_response = simmgr_shm->instructor.eyes.send_input_response;
+		simmgr_shm->instructor.eyes.send_input_response = -1;
+	}
 	// CPR
 	if (simmgr_shm->instructor.cpr.compression >= 0)
 	{
