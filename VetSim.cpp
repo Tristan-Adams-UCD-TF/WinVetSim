@@ -74,6 +74,7 @@ int updateScenarioState(ScenarioState new_state);
 
 ScenarioState scenario_state = ScenarioState::ScenarioStopped;
 NibpState nibp_state = NibpState::NibpIdle;
+static const char* eyeStateNames[] = { "Normal", "Obtunded", "Stuporous", "Comatose" };
 
 
 void SignalHandler(int signal)
@@ -1171,6 +1172,16 @@ time_update(void)
 				(simmgr_shm->status.respiration.etco2_indicator == 1 ? "on" : "off"),
 				(simmgr_shm->status.general.temperature_enable == 1 ? "on" : "off")
 			);
+
+			// If eyes are connected append eye neuro state status
+			if (simmgr_shm->status.eyes.connected)
+			{
+				char eyeAppend[64];
+				sprintf_s(eyeAppend, 64, "; Eyes: R %s; L %s",
+					eyeStateNames[simmgr_shm->status.eyes.right_state],
+					eyeStateNames[simmgr_shm->status.eyes.left_state]);
+				strncat_s(buf, BUF_SIZE, eyeAppend, _TRUNCATE);
+			}
 			simlog_entry(buf);
 		}
 		last_time_sec = seconds;
@@ -1960,6 +1971,8 @@ scan_commands(void)
 		simmgr_shm->status.eyes.connected = simmgr_shm->instructor.eyes.connected;
 		simmgr_shm->instructor.eyes.connected = -1;
 	}
+	int prevRightState = simmgr_shm->status.eyes.right_state;
+	int prevLeftState  = simmgr_shm->status.eyes.left_state;
 	if (simmgr_shm->instructor.eyes.right_state >= 0)
 	{
 		simmgr_shm->status.eyes.right_state = simmgr_shm->instructor.eyes.right_state;
@@ -2069,6 +2082,16 @@ scan_commands(void)
 	{
 		simmgr_shm->status.eyes.send_input_response = simmgr_shm->instructor.eyes.send_input_response;
 		simmgr_shm->instructor.eyes.send_input_response = -1;
+	}
+	if (simmgr_shm->status.eyes.connected &&
+		(prevRightState != simmgr_shm->status.eyes.right_state ||
+		 prevLeftState  != simmgr_shm->status.eyes.left_state))
+	{
+		char eyeBuf[BUF_SIZE];
+		sprintf_s(eyeBuf, BUF_SIZE, "Setting: Eyes Neuro State: R %s; L %s",
+			eyeStateNames[simmgr_shm->status.eyes.right_state],
+			eyeStateNames[simmgr_shm->status.eyes.left_state]);
+		simlog_entry(eyeBuf);
 	}
 	// CPR
 	if (simmgr_shm->instructor.cpr.compression >= 0)
