@@ -66,7 +66,7 @@ const char* parse_scene_states[] =
 {
 	"NONE", "INIT", "CARDIAC", "RESPIRATION",
 	"GENERAL", "VOCALS", "MEDIA", "CPR", "TELESIM",
-	"TIMEOUT", "TRIGS", "TRIG", "TRIG_GROUP", "TRIG_GROUP_TRIG", "INIT_EYES"
+	"TIMEOUT", "TRIGS", "TRIG", "TRIG_GROUP", "TRIG_GROUP_TRIG", "EYES"
 };
 
 const char* parse_header_states[] =

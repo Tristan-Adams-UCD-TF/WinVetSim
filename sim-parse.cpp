@@ -607,7 +607,7 @@ static int eyes_blink(const char* v)
 {
 	if (strcmp(v, "normal") == 0)        return 0;
 	if (strcmp(v, "infreq_slow") == 0)   return 1;
-	if (strcmp(v, "partial_infreq") == 0) return 2;
+	if (strcmp(v, "partial_infreq_slow") == 0) return 2;
 	if (strcmp(v, "none") == 0)          return 3;
 	return atoi(v);
 }
@@ -779,18 +779,23 @@ eyes_parse(const char* elem, const char* value, struct eyes* eyes)
 	else if (strcmp(elem, "pupil") == 0)
 	{
 		int v = atoi(value);
+		if (v < 5) v = 5; if (v > 90) v = 90;
 		eyes->right_pupil = v;
 		eyes->left_pupil  = v;
 		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "right_pupil") == 0)
 	{
-		eyes->right_pupil  = atoi(value);
+		int v = atoi(value);
+		if (v < 5) v = 5; if (v > 90) v = 90;
+		eyes->right_pupil  = v;
 		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "left_pupil") == 0)
 	{
-		eyes->left_pupil   = atoi(value);
+		int v = atoi(value);
+		if (v < 5) v = 5; if (v > 90) v = 90;
+		eyes->left_pupil   = v;
 		eyes->send_command = 1;
 	}
 	/* plr */
