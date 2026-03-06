@@ -59,14 +59,14 @@ const char* parse_states[] =
 const char* parse_init_states[] =
 {
 	"NONE", "CARDIAC", "RESPIRATION",
-	"GENERAL", "SCENE", "VOCALS", "TELESIM", "CPR"
+	"GENERAL", "SCENE", "VOCALS", "MEDIA", "CPR", "TELESIM", "EYES"
 };
 
 const char* parse_scene_states[] =
 {
 	"NONE", "INIT", "CARDIAC", "RESPIRATION",
 	"GENERAL", "VOCALS", "MEDIA", "CPR", "TELESIM",
-	"TIMEOUT", "TRIGS", "TRIG", "TRIG_GROUP", "TRIG_GROUP_TRIG"
+	"TIMEOUT", "TRIGS", "TRIG", "TRIG_GROUP", "TRIG_GROUP_TRIG", "INIT_EYES"
 };
 
 const char* parse_header_states[] =
@@ -531,6 +531,12 @@ saveData(const char* xmlName, const char* xmlValue)
 				sts = cpr_parse(xmlLevels[xml_current_level].name, value, &scenario->initParams.cpr);
 			}
 			break;
+		case PARSE_INIT_STATE_EYES:
+			if (xml_current_level == 3)
+			{
+				sts = eyes_parse(xmlLevels[xml_current_level].name, value, &scenario->initParams.eyes);
+			}
+			break;
 		case PARSE_INIT_STATE_SCENE:
 			if ((xml_current_level == 2) &&
 				(strcmp(xmlLevels[xml_current_level].name, "initial_scene") == 0))
@@ -670,6 +676,12 @@ saveData(const char* xmlName, const char* xmlValue)
 			if (xml_current_level == 4)
 			{
 				sts = cpr_parse(xmlLevels[4].name, value, &new_scene->initParams.cpr);
+			}
+			break;
+		case PARSE_SCENE_STATE_INIT_EYES:
+			if (xml_current_level == 4)
+			{
+				sts = eyes_parse(xmlLevels[4].name, value, &new_scene->initParams.eyes);
 			}
 			break;
 		case PARSE_SCENE_STATE_TRIGS:
@@ -1054,6 +1066,10 @@ startParseState(int lvl, char* name)
 			{
 				parse_init_state = PARSE_INIT_STATE_TELESIM;
 			}
+			else if (strcmp(name, "eyes") == 0)
+			{
+				parse_init_state = PARSE_INIT_STATE_EYES;
+			}
 			else
 			{
 				parse_init_state = PARSE_INIT_STATE_NONE;
@@ -1144,6 +1160,10 @@ startParseState(int lvl, char* name)
 			else if (strcmp(name, "telesim") == 0)
 			{
 				parse_scene_state = PARSE_SCENE_STATE_INIT_TELESIM;
+			}
+			else if (strcmp(name, "eyes") == 0)
+			{
+				parse_scene_state = PARSE_SCENE_STATE_INIT_EYES;
 			}
 
 			if (parse_scene_state == PARSE_SCENE_STATE_TRIGS)

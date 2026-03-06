@@ -571,6 +571,108 @@ cpr_parse(const char* elem, const char* value, struct cpr* cpr)
 	}
 	return (sts);
 }
+/* --- eyes_parse helpers --- */
+static int eyes_sv(const char* v)
+{
+	if (strcmp(v, "normal") == 0)    return 0;
+	if (strcmp(v, "obtunded") == 0)  return 1;
+	if (strcmp(v, "stuporous") == 0) return 2;
+	if (strcmp(v, "comatose") == 0)  return 3;
+	return atoi(v);
+}
+static int eyes_lid(const char* v)
+{
+	if (strcmp(v, "open") == 0)    return 0;
+	if (strcmp(v, "partial") == 0) return 1;
+	if (strcmp(v, "closed") == 0)  return 2;
+	return atoi(v);
+}
+static int eyes_move(const char* v)
+{
+	if (strcmp(v, "normal") == 0)      return 0;
+	if (strcmp(v, "infreq_slow") == 0) return 1;
+	if (strcmp(v, "none") == 0)        return 2;
+	return atoi(v);
+}
+static int eyes_pos(const char* v)
+{
+	if (strcmp(v, "center") == 0) return 0;
+	if (strcmp(v, "right") == 0)  return 1;
+	if (strcmp(v, "left") == 0)   return 2;
+	if (strcmp(v, "up") == 0)     return 3;
+	if (strcmp(v, "down") == 0)   return 4;
+	return atoi(v);
+}
+static int eyes_blink(const char* v)
+{
+	if (strcmp(v, "normal") == 0)        return 0;
+	if (strcmp(v, "infreq_slow") == 0)   return 1;
+	if (strcmp(v, "partial_infreq") == 0) return 2;
+	if (strcmp(v, "none") == 0)          return 3;
+	return atoi(v);
+}
+static int eyes_plr(const char* v)
+{
+	if (strcmp(v, "normal") == 0)  return 0;
+	if (strcmp(v, "partial") == 0) return 1;
+	if (strcmp(v, "none") == 0)    return 2;
+	return atoi(v);
+}
+static int eyes_menpal(const char* v)  /* menace / palpebral: none=0, normal=1, slow_partial=2 */
+{
+	if (strcmp(v, "none") == 0)         return 0;
+	if (strcmp(v, "normal") == 0)       return 1;
+	if (strcmp(v, "slow_partial") == 0) return 2;
+	return atoi(v);
+}
+static int eyes_nyst(const char* v)
+{
+	if (strcmp(v, "normal") == 0)    return 0;
+	if (strcmp(v, "slow") == 0)      return 1;
+	if (strcmp(v, "very_slow") == 0) return 2;
+	if (strcmp(v, "none") == 0)      return 3;
+	return atoi(v);
+}
+/* Apply defaults for a neurological state to one or both eyes.
+   Defaults match the "Set Defaults" button in the eye control modals. */
+static void applyEyeStateDefaults(struct eyes* e, int state, int applyRight, int applyLeft)
+{
+	struct { int lid, move, position, blink, pupil, plr, menace, palpebral, nystagmus; } defs[] = {
+		/* Normal    */ { 0, 0, 0, 0, 70, 0, 1, 1, 0 },
+		/* Obtunded  */ { 1, 1, 0, 2, 50, 0, 2, 1, 0 },
+		/* Stuporous */ { 1, 2, 0, 3, 20, 2, 0, 2, 1 },
+		/* Comatose  */ { 1, 2, 0, 3, 85, 2, 0, 0, 3 },
+	};
+	if (state < 0 || state > 3) return;
+	if (applyRight)
+	{
+		e->right_lid       = defs[state].lid;
+		e->right_move      = defs[state].move;
+		e->right_position  = defs[state].position;
+		e->right_blink     = defs[state].blink;
+		e->right_pupil     = defs[state].pupil;
+		e->right_plr       = defs[state].plr;
+		e->right_menace    = defs[state].menace;
+		e->right_palpebral = defs[state].palpebral;
+		e->right_nystagmus = defs[state].nystagmus;
+	}
+	if (applyLeft)
+	{
+		e->left_lid        = defs[state].lid;
+		e->left_move       = defs[state].move;
+		e->left_position   = defs[state].position;
+		e->left_blink      = defs[state].blink;
+		e->left_pupil      = defs[state].pupil;
+		e->left_plr        = defs[state].plr;
+		e->left_menace     = defs[state].menace;
+		e->left_palpebral  = defs[state].palpebral;
+		e->left_nystagmus  = defs[state].nystagmus;
+	}
+	e->send_command = 1;
+	e->send_input_response = 1;
+}
+/* --- end eyes_parse helpers --- */
+
 int
 eyes_parse(const char* elem, const char* value, struct eyes* eyes)
 {
@@ -580,89 +682,193 @@ eyes_parse(const char* elem, const char* value, struct eyes* eyes)
 	{
 		return (-16);
 	}
-	if (strcmp(elem, "connected") == 0)
+
+	/* Symmetric state: apply defaults to both eyes then set state fields */
+	if (strcmp(elem, "state") == 0)
 	{
-		eyes->connected = atoi(value);
+		int s = eyes_sv(value);
+		applyEyeStateDefaults(eyes, s, 1, 1);
+		eyes->right_state = s;
+		eyes->left_state  = s;
 	}
 	else if (strcmp(elem, "right_state") == 0)
 	{
-		eyes->right_state = atoi(value);
-	}
-	else if (strcmp(elem, "right_lid") == 0)
-	{
-		eyes->right_lid = atoi(value);
-	}
-	else if (strcmp(elem, "right_move") == 0)
-	{
-		eyes->right_move = atoi(value);
-	}
-	else if (strcmp(elem, "right_position") == 0)
-	{
-		eyes->right_position = atoi(value);
-	}
-	else if (strcmp(elem, "right_blink") == 0)
-	{
-		eyes->right_blink = atoi(value);
-	}
-	else if (strcmp(elem, "right_pupil") == 0)
-	{
-		eyes->right_pupil = atoi(value);
+		int s = eyes_sv(value);
+		applyEyeStateDefaults(eyes, s, 1, 0);
+		eyes->right_state = s;
 	}
 	else if (strcmp(elem, "left_state") == 0)
 	{
-		eyes->left_state = atoi(value);
+		int s = eyes_sv(value);
+		applyEyeStateDefaults(eyes, s, 0, 1);
+		eyes->left_state = s;
+	}
+	/* lid */
+	else if (strcmp(elem, "lid") == 0)
+	{
+		int v = eyes_lid(value);
+		eyes->right_lid = v;
+		eyes->left_lid  = v;
+		eyes->send_command = 1;
+	}
+	else if (strcmp(elem, "right_lid") == 0)
+	{
+		eyes->right_lid    = eyes_lid(value);
+		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "left_lid") == 0)
 	{
-		eyes->left_lid = atoi(value);
+		eyes->left_lid     = eyes_lid(value);
+		eyes->send_command = 1;
+	}
+	/* move */
+	else if (strcmp(elem, "move") == 0)
+	{
+		int v = eyes_move(value);
+		eyes->right_move = v;
+		eyes->left_move  = v;
+		eyes->send_command = 1;
+	}
+	else if (strcmp(elem, "right_move") == 0)
+	{
+		eyes->right_move   = eyes_move(value);
+		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "left_move") == 0)
 	{
-		eyes->left_move = atoi(value);
+		eyes->left_move    = eyes_move(value);
+		eyes->send_command = 1;
+	}
+	/* position */
+	else if (strcmp(elem, "position") == 0)
+	{
+		int v = eyes_pos(value);
+		eyes->right_position = v;
+		eyes->left_position  = v;
+		eyes->send_command = 1;
+	}
+	else if (strcmp(elem, "right_position") == 0)
+	{
+		eyes->right_position = eyes_pos(value);
+		eyes->send_command   = 1;
 	}
 	else if (strcmp(elem, "left_position") == 0)
 	{
-		eyes->left_position = atoi(value);
+		eyes->left_position  = eyes_pos(value);
+		eyes->send_command   = 1;
+	}
+	/* blink */
+	else if (strcmp(elem, "blink") == 0)
+	{
+		int v = eyes_blink(value);
+		eyes->right_blink = v;
+		eyes->left_blink  = v;
+		eyes->send_command = 1;
+	}
+	else if (strcmp(elem, "right_blink") == 0)
+	{
+		eyes->right_blink  = eyes_blink(value);
+		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "left_blink") == 0)
 	{
-		eyes->left_blink = atoi(value);
+		eyes->left_blink   = eyes_blink(value);
+		eyes->send_command = 1;
+	}
+	/* pupil */
+	else if (strcmp(elem, "pupil") == 0)
+	{
+		int v = atoi(value);
+		eyes->right_pupil = v;
+		eyes->left_pupil  = v;
+		eyes->send_command = 1;
+	}
+	else if (strcmp(elem, "right_pupil") == 0)
+	{
+		eyes->right_pupil  = atoi(value);
+		eyes->send_command = 1;
 	}
 	else if (strcmp(elem, "left_pupil") == 0)
 	{
-		eyes->left_pupil = atoi(value);
+		eyes->left_pupil   = atoi(value);
+		eyes->send_command = 1;
+	}
+	/* plr */
+	else if (strcmp(elem, "plr") == 0)
+	{
+		int v = eyes_plr(value);
+		eyes->right_plr = v;
+		eyes->left_plr  = v;
+		eyes->send_input_response = 1;
 	}
 	else if (strcmp(elem, "right_plr") == 0)
 	{
-		eyes->right_plr = atoi(value);
-	}
-	else if (strcmp(elem, "right_menace") == 0)
-	{
-		eyes->right_menace = atoi(value);
-	}
-	else if (strcmp(elem, "right_palpebral") == 0)
-	{
-		eyes->right_palpebral = atoi(value);
-	}
-	else if (strcmp(elem, "right_nystagmus") == 0)
-	{
-		eyes->right_nystagmus = atoi(value);
+		eyes->right_plr            = eyes_plr(value);
+		eyes->send_input_response  = 1;
 	}
 	else if (strcmp(elem, "left_plr") == 0)
 	{
-		eyes->left_plr = atoi(value);
+		eyes->left_plr             = eyes_plr(value);
+		eyes->send_input_response  = 1;
+	}
+	/* menace */
+	else if (strcmp(elem, "menace") == 0)
+	{
+		int v = eyes_menpal(value);
+		eyes->right_menace = v;
+		eyes->left_menace  = v;
+		eyes->send_input_response = 1;
+	}
+	else if (strcmp(elem, "right_menace") == 0)
+	{
+		eyes->right_menace         = eyes_menpal(value);
+		eyes->send_input_response  = 1;
 	}
 	else if (strcmp(elem, "left_menace") == 0)
 	{
-		eyes->left_menace = atoi(value);
+		eyes->left_menace          = eyes_menpal(value);
+		eyes->send_input_response  = 1;
+	}
+	/* palpebral */
+	else if (strcmp(elem, "palpebral") == 0)
+	{
+		int v = eyes_menpal(value);
+		eyes->right_palpebral = v;
+		eyes->left_palpebral  = v;
+		eyes->send_input_response = 1;
+	}
+	else if (strcmp(elem, "right_palpebral") == 0)
+	{
+		eyes->right_palpebral      = eyes_menpal(value);
+		eyes->send_input_response  = 1;
 	}
 	else if (strcmp(elem, "left_palpebral") == 0)
 	{
-		eyes->left_palpebral = atoi(value);
+		eyes->left_palpebral       = eyes_menpal(value);
+		eyes->send_input_response  = 1;
+	}
+	/* nystagmus */
+	else if (strcmp(elem, "nystagmus") == 0)
+	{
+		int v = eyes_nyst(value);
+		eyes->right_nystagmus = v;
+		eyes->left_nystagmus  = v;
+		eyes->send_input_response = 1;
+	}
+	else if (strcmp(elem, "right_nystagmus") == 0)
+	{
+		eyes->right_nystagmus      = eyes_nyst(value);
+		eyes->send_input_response  = 1;
 	}
 	else if (strcmp(elem, "left_nystagmus") == 0)
 	{
-		eyes->left_nystagmus = atoi(value);
+		eyes->left_nystagmus       = eyes_nyst(value);
+		eyes->send_input_response  = 1;
+	}
+	/* explicit flags and connected (used by HTTP path, kept for compatibility) */
+	else if (strcmp(elem, "connected") == 0)
+	{
+		eyes->connected = atoi(value);
 	}
 	else if (strcmp(elem, "send_command") == 0)
 	{

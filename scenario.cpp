@@ -272,6 +272,8 @@ scenario_main(void)
 	xml_current_level = 0;
 	current_scene_id = -1;
 	line_number = 0;
+	errCount = 0;
+	parseLog.clear();
 
 	parse_state = PARSE_STATE_NONE;
 	parse_init_state = PARSE_INIT_STATE_NONE;
