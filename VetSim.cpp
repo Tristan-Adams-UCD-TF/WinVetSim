@@ -473,6 +473,39 @@ resetAllParameters(void)
 	simmgr_shm->status.telesim.vid[1].param = 0;
 	simmgr_shm->status.telesim.vid[1].next = 0;
 
+	// status/eyes - initialize to Normal state defaults
+	simmgr_shm->status.eyes.right_pupil    = 70;
+	simmgr_shm->status.eyes.left_pupil     = 70;
+	simmgr_shm->status.eyes.right_menace   = 1;	  // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.right_palpebral = 1;  // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.left_menace    = 1;	  // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.left_palpebral = 1;	  // EYE_BLINK_RESP_NORMAL
+
+	// instructor/eyes
+	simmgr_shm->instructor.eyes.connected           = -1;
+	simmgr_shm->instructor.eyes.right_state         = -1;
+	simmgr_shm->instructor.eyes.right_lid           = -1;
+	simmgr_shm->instructor.eyes.right_move          = -1;
+	simmgr_shm->instructor.eyes.right_position      = -1;
+	simmgr_shm->instructor.eyes.right_blink         = -1;
+	simmgr_shm->instructor.eyes.right_pupil         = -1;
+	simmgr_shm->instructor.eyes.left_state          = -1;
+	simmgr_shm->instructor.eyes.left_lid            = -1;
+	simmgr_shm->instructor.eyes.left_move           = -1;
+	simmgr_shm->instructor.eyes.left_position       = -1;
+	simmgr_shm->instructor.eyes.left_blink          = -1;
+	simmgr_shm->instructor.eyes.left_pupil          = -1;
+	simmgr_shm->instructor.eyes.send_command        = -1;
+	simmgr_shm->instructor.eyes.right_plr           = -1;
+	simmgr_shm->instructor.eyes.right_menace        = -1;
+	simmgr_shm->instructor.eyes.right_palpebral     = -1;
+	simmgr_shm->instructor.eyes.right_nystagmus     = -1;
+	simmgr_shm->instructor.eyes.left_plr            = -1;
+	simmgr_shm->instructor.eyes.left_menace         = -1;
+	simmgr_shm->instructor.eyes.left_palpebral      = -1;
+	simmgr_shm->instructor.eyes.left_nystagmus      = -1;
+	simmgr_shm->instructor.eyes.send_input_response = -1;
+
 	// instructor/cardiac
 	sprintf_s(simmgr_shm->instructor.cardiac.rhythm, STR_SIZE, "%s", "");
 	simmgr_shm->instructor.cardiac.rate = -1;
