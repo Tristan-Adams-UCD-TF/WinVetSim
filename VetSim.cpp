@@ -474,12 +474,16 @@ resetAllParameters(void)
 	simmgr_shm->status.telesim.vid[1].next = 0;
 
 	// status/eyes - initialize to Normal state defaults
-	simmgr_shm->status.eyes.right_pupil    = 70;
-	simmgr_shm->status.eyes.left_pupil     = 70;
-	simmgr_shm->status.eyes.right_menace   = 1;	  // EYE_BLINK_RESP_NORMAL
-	simmgr_shm->status.eyes.right_palpebral = 1;  // EYE_BLINK_RESP_NORMAL
-	simmgr_shm->status.eyes.left_menace    = 1;	  // EYE_BLINK_RESP_NORMAL
-	simmgr_shm->status.eyes.left_palpebral = 1;	  // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.right_pupil           = 70;
+	simmgr_shm->status.eyes.left_pupil            = 70;
+	simmgr_shm->status.eyes.right_plr_exposed     = 0;   // EYE_PLR_NORMAL
+	simmgr_shm->status.eyes.right_plr_consensual  = 0;   // EYE_PLR_NORMAL
+	simmgr_shm->status.eyes.right_menace          = 1;   // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.right_palpebral       = 1;   // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.left_plr_exposed      = 0;   // EYE_PLR_NORMAL
+	simmgr_shm->status.eyes.left_plr_consensual   = 0;   // EYE_PLR_NORMAL
+	simmgr_shm->status.eyes.left_menace           = 1;   // EYE_BLINK_RESP_NORMAL
+	simmgr_shm->status.eyes.left_palpebral        = 1;   // EYE_BLINK_RESP_NORMAL
 
 	// instructor/eyes
 	simmgr_shm->instructor.eyes.connected           = -1;
@@ -496,11 +500,13 @@ resetAllParameters(void)
 	simmgr_shm->instructor.eyes.left_blink          = -1;
 	simmgr_shm->instructor.eyes.left_pupil          = -1;
 	simmgr_shm->instructor.eyes.send_command        = -1;
-	simmgr_shm->instructor.eyes.right_plr           = -1;
+	simmgr_shm->instructor.eyes.right_plr_exposed    = -1;
+	simmgr_shm->instructor.eyes.right_plr_consensual = -1;
 	simmgr_shm->instructor.eyes.right_menace        = -1;
 	simmgr_shm->instructor.eyes.right_palpebral     = -1;
 	simmgr_shm->instructor.eyes.right_nystagmus     = -1;
-	simmgr_shm->instructor.eyes.left_plr            = -1;
+	simmgr_shm->instructor.eyes.left_plr_exposed    = -1;
+	simmgr_shm->instructor.eyes.left_plr_consensual = -1;
 	simmgr_shm->instructor.eyes.left_menace         = -1;
 	simmgr_shm->instructor.eyes.left_palpebral      = -1;
 	simmgr_shm->instructor.eyes.left_nystagmus      = -1;
@@ -2071,10 +2077,15 @@ scan_commands(void)
 		simmgr_shm->status.eyes.send_command = simmgr_shm->instructor.eyes.send_command;
 		simmgr_shm->instructor.eyes.send_command = -1;
 	}
-	if (simmgr_shm->instructor.eyes.right_plr >= 0)
+	if (simmgr_shm->instructor.eyes.right_plr_exposed >= 0)
 	{
-		simmgr_shm->status.eyes.right_plr = simmgr_shm->instructor.eyes.right_plr;
-		simmgr_shm->instructor.eyes.right_plr = -1;
+		simmgr_shm->status.eyes.right_plr_exposed = simmgr_shm->instructor.eyes.right_plr_exposed;
+		simmgr_shm->instructor.eyes.right_plr_exposed = -1;
+	}
+	if (simmgr_shm->instructor.eyes.right_plr_consensual >= 0)
+	{
+		simmgr_shm->status.eyes.right_plr_consensual = simmgr_shm->instructor.eyes.right_plr_consensual;
+		simmgr_shm->instructor.eyes.right_plr_consensual = -1;
 	}
 	if (simmgr_shm->instructor.eyes.right_menace >= 0)
 	{
@@ -2091,10 +2102,15 @@ scan_commands(void)
 		simmgr_shm->status.eyes.right_nystagmus = simmgr_shm->instructor.eyes.right_nystagmus;
 		simmgr_shm->instructor.eyes.right_nystagmus = -1;
 	}
-	if (simmgr_shm->instructor.eyes.left_plr >= 0)
+	if (simmgr_shm->instructor.eyes.left_plr_exposed >= 0)
 	{
-		simmgr_shm->status.eyes.left_plr = simmgr_shm->instructor.eyes.left_plr;
-		simmgr_shm->instructor.eyes.left_plr = -1;
+		simmgr_shm->status.eyes.left_plr_exposed = simmgr_shm->instructor.eyes.left_plr_exposed;
+		simmgr_shm->instructor.eyes.left_plr_exposed = -1;
+	}
+	if (simmgr_shm->instructor.eyes.left_plr_consensual >= 0)
+	{
+		simmgr_shm->status.eyes.left_plr_consensual = simmgr_shm->instructor.eyes.left_plr_consensual;
+		simmgr_shm->instructor.eyes.left_plr_consensual = -1;
 	}
 	if (simmgr_shm->instructor.eyes.left_menace >= 0)
 	{

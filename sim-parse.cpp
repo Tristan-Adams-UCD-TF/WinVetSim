@@ -637,36 +637,38 @@ static int eyes_nyst(const char* v)
    Defaults match the "Set Defaults" button in the eye control modals. */
 static void applyEyeStateDefaults(struct eyes* e, int state, int applyRight, int applyLeft)
 {
-	struct { int lid, move, position, blink, pupil, plr, menace, palpebral, nystagmus; } defs[] = {
-		/* Normal    */ { 0, 0, 0, 0, 70, 0, 1, 1, 0 },
-		/* Obtunded  */ { 1, 1, 0, 2, 50, 0, 2, 1, 0 },
-		/* Stuporous */ { 1, 2, 0, 3, 20, 2, 0, 2, 1 },
-		/* Comatose  */ { 1, 2, 0, 3, 85, 2, 0, 0, 3 },
+	struct { int lid, move, position, blink, pupil, plr_exposed, plr_consensual, menace, palpebral, nystagmus; } defs[] = {
+		/* Normal    */ { 0, 0, 0, 0, 70, 0, 0, 1, 1, 0 },
+		/* Obtunded  */ { 1, 1, 0, 2, 50, 0, 0, 2, 1, 0 },
+		/* Stuporous */ { 1, 2, 0, 3, 20, 2, 2, 0, 2, 1 },
+		/* Comatose  */ { 1, 2, 0, 3, 85, 2, 2, 0, 0, 3 },
 	};
 	if (state < 0 || state > 3) return;
 	if (applyRight)
 	{
-		e->right_lid       = defs[state].lid;
-		e->right_move      = defs[state].move;
-		e->right_position  = defs[state].position;
-		e->right_blink     = defs[state].blink;
-		e->right_pupil     = defs[state].pupil;
-		e->right_plr       = defs[state].plr;
-		e->right_menace    = defs[state].menace;
-		e->right_palpebral = defs[state].palpebral;
-		e->right_nystagmus = defs[state].nystagmus;
+		e->right_lid              = defs[state].lid;
+		e->right_move             = defs[state].move;
+		e->right_position         = defs[state].position;
+		e->right_blink            = defs[state].blink;
+		e->right_pupil            = defs[state].pupil;
+		e->right_plr_exposed      = defs[state].plr_exposed;
+		e->right_plr_consensual   = defs[state].plr_consensual;
+		e->right_menace           = defs[state].menace;
+		e->right_palpebral        = defs[state].palpebral;
+		e->right_nystagmus        = defs[state].nystagmus;
 	}
 	if (applyLeft)
 	{
-		e->left_lid        = defs[state].lid;
-		e->left_move       = defs[state].move;
-		e->left_position   = defs[state].position;
-		e->left_blink      = defs[state].blink;
-		e->left_pupil      = defs[state].pupil;
-		e->left_plr        = defs[state].plr;
-		e->left_menace     = defs[state].menace;
-		e->left_palpebral  = defs[state].palpebral;
-		e->left_nystagmus  = defs[state].nystagmus;
+		e->left_lid               = defs[state].lid;
+		e->left_move              = defs[state].move;
+		e->left_position          = defs[state].position;
+		e->left_blink             = defs[state].blink;
+		e->left_pupil             = defs[state].pupil;
+		e->left_plr_exposed       = defs[state].plr_exposed;
+		e->left_plr_consensual    = defs[state].plr_consensual;
+		e->left_menace            = defs[state].menace;
+		e->left_palpebral         = defs[state].palpebral;
+		e->left_nystagmus         = defs[state].nystagmus;
 	}
 	e->send_command = 1;
 	e->send_input_response = 1;
@@ -799,21 +801,24 @@ eyes_parse(const char* elem, const char* value, struct eyes* eyes)
 		eyes->send_command = 1;
 	}
 	/* plr */
-	else if (strcmp(elem, "plr") == 0)
+	else if (strcmp(elem, "right_plr_exposed") == 0)
 	{
-		int v = eyes_plr(value);
-		eyes->right_plr = v;
-		eyes->left_plr  = v;
-		eyes->send_input_response = 1;
-	}
-	else if (strcmp(elem, "right_plr") == 0)
-	{
-		eyes->right_plr            = eyes_plr(value);
+		eyes->right_plr_exposed    = eyes_plr(value);
 		eyes->send_input_response  = 1;
 	}
-	else if (strcmp(elem, "left_plr") == 0)
+	else if (strcmp(elem, "right_plr_consensual") == 0)
 	{
-		eyes->left_plr             = eyes_plr(value);
+		eyes->right_plr_consensual = eyes_plr(value);
+		eyes->send_input_response  = 1;
+	}
+	else if (strcmp(elem, "left_plr_exposed") == 0)
+	{
+		eyes->left_plr_exposed     = eyes_plr(value);
+		eyes->send_input_response  = 1;
+	}
+	else if (strcmp(elem, "left_plr_consensual") == 0)
+	{
+		eyes->left_plr_consensual  = eyes_plr(value);
 		eyes->send_input_response  = 1;
 	}
 	/* menace */
@@ -982,11 +987,13 @@ initializeParameterStruct(struct instructor* initParams)
 	initParams->eyes.left_position = -1;
 	initParams->eyes.left_blink = -1;
 	initParams->eyes.left_pupil = -1;
-	initParams->eyes.right_plr = -1;
+	initParams->eyes.right_plr_exposed = -1;
+	initParams->eyes.right_plr_consensual = -1;
 	initParams->eyes.right_menace = -1;
 	initParams->eyes.right_palpebral = -1;
 	initParams->eyes.right_nystagmus = -1;
-	initParams->eyes.left_plr = -1;
+	initParams->eyes.left_plr_exposed = -1;
+	initParams->eyes.left_plr_consensual = -1;
 	initParams->eyes.left_menace = -1;
 	initParams->eyes.left_palpebral = -1;
 	initParams->eyes.left_nystagmus = -1;

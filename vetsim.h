@@ -321,11 +321,13 @@ struct eyes
 	int left_position;
 	int left_blink;
 	int left_pupil;
-	int right_plr;
+	int right_plr_exposed;
+	int right_plr_consensual;
 	int right_menace;
 	int right_palpebral;
 	int right_nystagmus;
-	int left_plr;
+	int left_plr_exposed;
+	int left_plr_consensual;
 	int left_menace;
 	int left_palpebral;
 	int left_nystagmus;
