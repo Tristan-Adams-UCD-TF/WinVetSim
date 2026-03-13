@@ -592,6 +592,10 @@ static int eyes_move(const char* v)
 	if (strcmp(v, "normal") == 0)      return 0;
 	if (strcmp(v, "infreq_slow") == 0) return 1;
 	if (strcmp(v, "none") == 0)        return 2;
+	if (strcmp(v, "drift_r") == 0)     return 3;
+	if (strcmp(v, "drift_l") == 0)     return 4;
+	if (strcmp(v, "drift_u") == 0)     return 5;
+	if (strcmp(v, "drift_d") == 0)     return 6;
 	return atoi(v);
 }
 static int eyes_pos(const char* v)
