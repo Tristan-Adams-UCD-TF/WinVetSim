@@ -145,10 +145,6 @@ simstatusMain(void)
 		cfd = accept(sfd, (struct sockaddr*)&client_addr, &socklen);
 		if (cfd >= 0)
 		{
-			// Set receive timeout to prevent blocking on preconnected sockets
-			DWORD rcvTimeout = 2000;  // 2 seconds
-			setsockopt(cfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&rcvTimeout, sizeof(rcvTimeout));
-
 			htmlReply.clear();
 
 			// Receive HTTP Header
